@@ -1,0 +1,28 @@
+#!/usr/bin/bash
+
+# Program:      dmenu-edit-config
+# Author:       Michael Nogueira
+# Date Created: 2023/10/23
+# Last Updated: 2023/10/23
+#
+# **this script depends on dmenu**
+#
+# Select from a list of configs to open in nvim
+
+OPTIONS=(
+  "nvim     - $HOME/.config/nvim/"
+  "i3       - $HOME/.config/i3/"
+  "i3blocks - $HOME/.config/i3blocks/"
+  "bashrc   - $HOME/.bashrc"
+)
+
+CHOICE=$(printf '%s\n' "${OPTIONS[@]}" | dmenu -i -l 5 -p 'Configure: ')
+[[ -z "$CHOICE" ]] && exit
+
+DIR=$(echo "$CHOICE" | awk '{print $NF}')
+if [[ -d "$DIR" ]]; then
+  setsid -f gnome-terminal --working-directory=$DIR -- nvim
+else
+  setsid -f gnome-terminal -- nvim $DIR
+fi
+

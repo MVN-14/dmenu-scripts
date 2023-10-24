@@ -1,0 +1,36 @@
+#!/usr/bin/bash
+
+# Program:      dmenu-dev
+# Author:       Michael Nogueira
+# Date Created: 2023/10/23
+# Last Updated: 2023/10/23
+#
+# **this script depends on dmenu**
+#
+# Opens a folder or file in neovim
+# select "." to open current folder, or select a file
+
+DIR="$HOME/Dev"
+
+while [ -z "$CHOICE" ]; do
+  DIR_CONTENTS=("$DIR"/*)
+  CHOICES=(".." "." "${DIR_CONTENTS[@]}")
+  CHOICE=$(printf '%s\n' "${CHOICES[@]}" | dmenu -i -l 10 -p "Open in nvim:")
+
+  [[ -z "$CHOICE" ]] && exit
+
+  [[ "$CHOICE" == "." ]] && setsid gnome-terminal --working-directory="$DIR" -- nvim && exit
+
+  if [[ "$CHOICE" == ".." ]]; then
+    RELATIVE=$( echo "$DIR" | awk -F / '{print $NF}')
+    DIR="${DIR/"/$RELATIVE"/}"
+  else
+    DIR="$CHOICE"
+  fi
+
+  [[ -f "$DIR" ]] && setsid gnome-terminal -- nvim $DIR && exit
+
+  CHOICE=""
+done
+
+

@@ -1,0 +1,16 @@
+#!/usr/bin/bash
+
+# Program:      dmenu-soad
+# Author:       Michael Nogueira
+# Date Created: 2023/10/23
+# Last Updated: 2023/10/23
+#
+# **this script depends on dmenu**
+#
+# Select audio output device
+
+CHOICE=$(pactl list short sinks | awk '{print $1" - "$2" ("$NF")" }' | dmenu -i -l 5 -p 'Select Output Device')
+[[ -z "$CHOICE" ]] && exit 1
+
+SINK_NAME=$(echo $CHOICE | awk '{print $3}')
+pactl set-default-sink $SINK_NAME
