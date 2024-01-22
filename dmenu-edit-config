@@ -21,12 +21,13 @@ CHOICE=$(printf '%s\n' "${OPTIONS[@]}" | dmenu -i -l 5 -p 'Configure: ')
 
 DIR=$(echo "$CHOICE" | awk '{print $NF}')
 if [[ -d "$DIR" ]]; then
-  setsid -f gnome-terminal -- sh -c "cd $DIR && nvim"
+  # setsid kitty -- sh -c "cd $DIR && nvim"
+  setsid kitty -d $DIR -- nvim
 else
   FILE=$(echo $DIR | awk -F / "{print $NF}")
   PARENT="${DIR/"/$FILE"/}"
   echo $FILE
   echo $PARENT
-  setsid -f gnome-terminal --working-directory $PARENT -- nvim $FILE
+  setsid kitty -d $PARENT -- nvim $FILE
 fi
 

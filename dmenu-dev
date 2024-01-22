@@ -13,30 +13,28 @@
 DIR="$HOME/Dev"
 
 while [ -z "$CHOICE" ]; do
-  echo $DIR
   DIR_CONTENTS=("$DIR"/*)
   CHOICES=(".." "." "${DIR_CONTENTS[@]}")
   CHOICE=$(printf '%s\n' "${CHOICES[@]}" | dmenu -i -l 10 -p "Open in nvim:")
   [[ -z "$CHOICE" ]] && exit
 
+  # escape spaces
   SAFE_DIR=$(echo "$DIR" | sed 's! !\\ !g')
-  [[ "$CHOICE" == "." ]] && setsid gnome-terminal -- sh -c "cd $SAFE_DIR && nvim" && exit
+  [[ "$CHOICE" == "." ]] && setsid kitty -d $SAFE_DIR -- nvim && exit
 
   NAME=$(echo "$CHOICE" | awk -F / '{print $NF}')
   SAFE_NAME=$(echo "$NAME" | sed 's! !\\ !g')
-  echo $SAFE_DIR
-  echo $SAFE_NAME
+
   if [[ -f "$CHOICE" ]]; then
-    # SAFE_DIR="${CHOICE/"/$SAFE_NAME"/}"
-    setsid gnome-terminal -- sh -c "cd $SAFE_DIR && nvim $SAFE_NAME" && exit
+    setsid kitty -d $SAFE_DIR -- nvim $SAFE_NAME && exit
   fi
 
   if [[ "$CHOICE" == ".." ]]; then
-    DIR="${DIR/"/$NAME"/}"
+    CHILD=$(echo "$DIR" | awk -F / '{print $NF}')
+    DIR="${DIR/"/$CHILD"/}"
   else
     DIR="$CHOICE"
   fi
-
 
   CHOICE=""
 done
