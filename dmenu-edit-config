@@ -10,10 +10,11 @@
 # Select from a list of configs to open in nvim
 
 OPTIONS=(
-  "nvim     - $HOME/.config/nvim/"
-  "i3       - $HOME/.config/i3/"
-  "i3blocks - $HOME/.config/i3blocks/"
-  "bashrc   - $HOME/.bashrc"
+  "nvim        - $HOME/.config/nvim/"
+  "i3          - $HOME/.config/i3/"
+  "i3blocks    - $HOME/.config/i3blocks/"
+  "bashrc      - $HOME/.bashrc"
+  "kitty       - $HOME/.config/kitty/"
 )
 
 CHOICE=$(printf '%s\n' "${OPTIONS[@]}" | dmenu -i -l 5 -p 'Configure: ')
@@ -21,7 +22,6 @@ CHOICE=$(printf '%s\n' "${OPTIONS[@]}" | dmenu -i -l 5 -p 'Configure: ')
 
 DIR=$(echo "$CHOICE" | awk '{print $NF}')
 if [[ -d "$DIR" ]]; then
-  # setsid kitty -- sh -c "cd $DIR && nvim"
   setsid kitty -d $DIR -- nvim
 else
   FILE=$(echo $DIR | awk -F / "{print $NF}")
