@@ -3,18 +3,18 @@
 # Program:      dmenu-edit-config
 # Author:       Michael Nogueira
 # Date Created: 2023/10/23
-# Last Updated: 2023/10/23
+# Last Updated: 2024/04/05
 #
 # **this script depends on dmenu**
 #
 # Select from a list of configs to open in nvim
 
 OPTIONS=(
-  "nvim        - $HOME/.config/nvim/"
-  "i3          - $HOME/.config/i3/"
-  "i3blocks    - $HOME/.config/i3blocks/"
-  "bashrc      - $HOME/.bashrc"
-  "kitty       - $HOME/.config/kitty/"
+  "nvim      - $HOME/.config/nvim/"
+  "i3        - $HOME/.config/i3/"
+  "i3blocks  - $HOME/.config/i3blocks/"
+  "Alacritty - $HOME/.config/alacritty/"
+  "bashrc    - $HOME/.bashrc"
 )
 
 CHOICE=$(printf '%s\n' "${OPTIONS[@]}" | dmenu -i -l 5 -p 'Configure: ')
@@ -22,12 +22,12 @@ CHOICE=$(printf '%s\n' "${OPTIONS[@]}" | dmenu -i -l 5 -p 'Configure: ')
 
 DIR=$(echo "$CHOICE" | awk '{print $NF}')
 if [[ -d "$DIR" ]]; then
-  setsid kitty -d $DIR -- nvim
+  setsid alacritty --working-directory $DIR --command nvim
 else
   FILE=$(echo $DIR | awk -F / "{print $NF}")
   PARENT="${DIR/"/$FILE"/}"
   echo $FILE
   echo $PARENT
-  setsid kitty -d $PARENT -- nvim $FILE
+  setsid alacritty --working-directory $PARENT --command nvim $FILE
 fi
 

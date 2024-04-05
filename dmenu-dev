@@ -20,13 +20,13 @@ while [ -z "$CHOICE" ]; do
 
   # escape spaces
   SAFE_DIR=$(echo "$DIR" | sed 's! !\\ !g')
-  [[ "$CHOICE" == "." ]] && setsid kitty -d $SAFE_DIR -- nvim && exit
+  [[ "$CHOICE" == "." ]] && setsid alacritty --working-directory $SAFE_DIR --command nvim && exit
 
   NAME=$(echo "$CHOICE" | awk -F / '{print $NF}')
   SAFE_NAME=$(echo "$NAME" | sed 's! !\\ !g')
 
   if [[ -f "$CHOICE" ]]; then
-    setsid kitty -d $SAFE_DIR -- nvim $SAFE_NAME && exit
+    setsid alacritty --working-directory $SAFE_DIR --command nvim $SAFE_NAME && exit
   fi
 
   if [[ "$CHOICE" == ".." ]]; then
